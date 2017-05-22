@@ -45,7 +45,7 @@ type serviceSource struct {
 }
 
 // NewServiceSource creates a new serviceSource with the given config.
-func NewServiceSource(cfg *Config) (Source, error) {
+func NewServiceSource(cfg Config) (Source, error) {
 	if cfg.KubeClient == nil {
 		client, err := newKubeClient(cfg)
 		if err != nil {

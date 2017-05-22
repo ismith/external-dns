@@ -41,7 +41,7 @@ type ingressSource struct {
 }
 
 // NewIngressSource creates a new ingressSource with the given config.
-func NewIngressSource(cfg *Config) (Source, error) {
+func NewIngressSource(cfg Config) (Source, error) {
 	if cfg.KubeClient == nil {
 		client, err := newKubeClient(cfg)
 		if err != nil {

@@ -57,7 +57,7 @@ func TestNewIngressSource(t *testing.T) {
 		},
 	} {
 		t.Run(ti.title, func(t *testing.T) {
-			_, err := NewIngressSource(&Config{
+			_, err := NewIngressSource(Config{
 				KubeClient:   fake.NewSimpleClientset(),
 				FQDNTemplate: ti.fqdnTemplate,
 			})
@@ -343,7 +343,7 @@ func testIngressEndpoints(t *testing.T) {
 			}
 
 			fakeClient := fake.NewSimpleClientset()
-			ingressSource, _ := NewIngressSource(&Config{
+			ingressSource, _ := NewIngressSource(Config{
 				KubeClient:   fakeClient,
 				Namespace:    ti.targetNamespace,
 				FQDNTemplate: ti.fqdnTemplate,
