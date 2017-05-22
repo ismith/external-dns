@@ -71,7 +71,7 @@ func main() {
 	}
 
 	// Lookup all the selected sources and pass them the desired configuration.
-	sources, err := source.LookupMultiple(cfg.Sources, &sourceCfg)
+	sources, err := source.LookupMultiple(cfg.Sources, sourceCfg)
 	if err != nil {
 		log.Fatal(err)
 	}

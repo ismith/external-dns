@@ -25,7 +25,7 @@ import (
 )
 
 func generateTestEndpoints() []*endpoint.Endpoint {
-	sc, _ := NewFakeSource(&Config{})
+	sc, _ := NewFakeSource(Config{})
 
 	endpoints, _ := sc.Endpoints()
 

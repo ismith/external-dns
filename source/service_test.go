@@ -56,7 +56,7 @@ func TestNewServiceSource(t *testing.T) {
 		},
 	} {
 		t.Run(ti.title, func(t *testing.T) {
-			_, err := NewServiceSource(&Config{
+			_, err := NewServiceSource(Config{
 				KubeClient:   fake.NewSimpleClientset(),
 				FQDNTemplate: ti.fqdnTemplate,
 			})
@@ -398,7 +398,7 @@ func testServiceEndpoints(t *testing.T) {
 			}
 
 			// Create our object under test and get the endpoints.
-			client, _ := NewServiceSource(&Config{
+			client, _ := NewServiceSource(Config{
 				KubeClient:    kubernetes,
 				Namespace:     tc.targetNamespace,
 				FQDNTemplate:  tc.fqdnTemplate,
@@ -446,7 +446,7 @@ func BenchmarkServiceEndpoints(b *testing.B) {
 		b.Fatal(err)
 	}
 
-	client, _ := NewServiceSource(&Config{KubeClient: kubernetes})
+	client, _ := NewServiceSource(Config{KubeClient: kubernetes})
 
 	for i := 0; i < b.N; i++ {
 		_, err := client.Endpoints()

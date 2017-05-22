@@ -26,7 +26,7 @@ func init() {
 }
 
 // sourceFunc is a constructor function that returns a Source and an error.
-type sourceFunc func(cfg *Config) (Source, error)
+type sourceFunc func(cfg Config) (Source, error)
 
 // store is a global store for known sources.
 var store = map[string]sourceFunc{}
@@ -36,7 +36,7 @@ var ErrSourceNotFound = errors.New("source not found")
 
 // Register registers a Source under a given name.
 func Register(name string, source Source) {
-	store[name] = func(_ *Config) (Source, error) { return source, nil }
+	store[name] = func(_ Config) (Source, error) { return source, nil }
 }
 
 // RegisterFunc registers a Source under a given name via a constructor function.
@@ -50,7 +50,7 @@ func Clear() {
 }
 
 // Lookup returns a Source by the given name.
-func Lookup(name string, cfg *Config) (Source, error) {
+func Lookup(name string, cfg Config) (Source, error) {
 	sf, ok := store[name]
 	if !ok {
 		return nil, ErrSourceNotFound
@@ -65,7 +65,7 @@ func Lookup(name string, cfg *Config) (Source, error) {
 }
 
 // LookupMultiple returns multiple Sources given multiple names.
-func LookupMultiple(names []string, cfg *Config) ([]Source, error) {
+func LookupMultiple(names []string, cfg Config) ([]Source, error) {
 	sources := []Source{}
 
 	for _, name := range names {

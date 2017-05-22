@@ -54,7 +54,7 @@ type Config struct {
 // newKubeClient returns a new Kubernetes client object. It takes a Config and
 // uses KubeMaster and KubeConfig attributes to connect to the cluster. If
 // KubeConfig isn't provided it defaults to using the recommended default.
-func newKubeClient(cfg *Config) (*kubernetes.Clientset, error) {
+func newKubeClient(cfg Config) (*kubernetes.Clientset, error) {
 	if cfg.KubeConfig == "" {
 		if _, err := os.Stat(clientcmd.RecommendedHomeFile); err == nil {
 			cfg.KubeConfig = clientcmd.RecommendedHomeFile

@@ -48,7 +48,7 @@ func testRegisterAndLookup(t *testing.T) {
 
 			// Validate that we can lookup the registered sources by name.
 			for k, v := range tc.sources {
-				src, err := Lookup(k, nil)
+				src, err := Lookup(k, Config{})
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -81,12 +81,12 @@ func testRegisterAndLookupFunc(t *testing.T) {
 
 			// Register the source objects under test via contructor functions.
 			for k, v := range tc.sources {
-				RegisterFunc(k, func(_ *Config) (Source, error) { return v, nil })
+				RegisterFunc(k, func(_ Config) (Source, error) { return v, nil })
 			}
 
 			// Validate that we can lookup the registered sources by name.
 			for k, v := range tc.sources {
-				src, err := Lookup(k, nil)
+				src, err := Lookup(k, Config{})
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -135,7 +135,7 @@ func testLookupMultiple(t *testing.T) {
 			}
 
 			// Lookup multiple sources by names.
-			lookup, err := LookupMultiple(tc.names, nil)
+			lookup, err := LookupMultiple(tc.names, Config{})
 			if !tc.expectError && err != nil {
 				t.Fatal(err)
 			}
