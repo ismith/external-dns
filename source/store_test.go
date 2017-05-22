@@ -20,7 +20,6 @@ import "testing"
 
 func TestStore(t *testing.T) {
 	t.Run("RegisterAndLookup", testRegisterAndLookup)
-	t.Run("RegisterAndLookupFunc", testRegisterAndLookupFunc)
 	t.Run("LookupMultiple", testLookupMultiple)
 }
 
@@ -39,49 +38,14 @@ func testRegisterAndLookup(t *testing.T) {
 	} {
 		t.Run(tc.title, func(t *testing.T) {
 			// Clear already registered sources.
-			Clear()
+			clearStore()
 
 			// Register the source objects under test.
 			for k, v := range tc.sources {
-				Register(k, v)
-			}
-
-			// Validate that we can lookup the registered sources by name.
-			for k, v := range tc.sources {
-				src, err := Lookup(k, Config{})
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				if src != v {
-					t.Errorf("expected %#v, got %#v", v, src)
-				}
-			}
-		})
-	}
-}
-
-// testRegisterAndLookupFunc tests that a Source can be registered and looked up
-// by name via constructor functions.
-func testRegisterAndLookupFunc(t *testing.T) {
-	for _, tc := range []struct {
-		title   string
-		sources map[string]Source
-	}{
-		{
-			"registered source is found by name via constructor func",
-			map[string]Source{
-				"foo": NewMockSource(nil),
-			},
-		},
-	} {
-		t.Run(tc.title, func(t *testing.T) {
-			// Clear already registered sources.
-			Clear()
-
-			// Register the source objects under test via contructor functions.
-			for k, v := range tc.sources {
-				RegisterFunc(k, func(_ Config) (Source, error) { return v, nil })
+				// wrap in a function to keep correct scope for v
+				func(v Source) {
+					store[k] = func(_ Config) (Source, error) { return v, nil }
+				}(v)
 			}
 
 			// Validate that we can lookup the registered sources by name.
@@ -127,11 +91,14 @@ func testLookupMultiple(t *testing.T) {
 	} {
 		t.Run(tc.title, func(t *testing.T) {
 			// Clear already registered sources.
-			Clear()
+			clearStore()
 
 			// Register the source objects under test.
 			for k, v := range tc.sources {
-				Register(k, v)
+				// wrap in a function to keep correct scope for v
+				func(v Source) {
+					store[k] = func(_ Config) (Source, error) { return v, nil }
+				}(v)
 			}
 
 			// Lookup multiple sources by names.
@@ -155,4 +122,9 @@ func testLookupMultiple(t *testing.T) {
 			}
 		})
 	}
+}
+
+// clearStore de-registers all sources from the global store.
+func clearStore() {
+	store = map[string]sourceFunc{}
 }
